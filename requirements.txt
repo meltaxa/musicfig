@@ -1,0 +1,10 @@
+colorthief
+flask
+nfcpy
+pyaudio
+pydub
+pyusb
+pyyaml
+simpleaudio
+soundfile
+tekore

@@ -1,0 +1,70 @@
+<script type="text/javascript">
+function title(text) {
+    document.title = text;
+}
+title("{{ name or 'Jukebox Portal' }}")
+</script>
+<style type="text/css">
+body{
+    background-image: url({{ image_url or "/images/splash-800.jpg" }});
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    backdrop-filter: blur(10px);
+    margin: 0;
+    padding: 0;
+    font-family:Helvetica;
+    text-shadow: 0px 0px 2px #000;
+    color: #fff;
+    height: 100%;
+}
+img.art{
+    position: absolute;
+    max-width: 80%;
+    top: 10%;
+    left: 10%;
+    border-radius: 3px;
+}
+img.art:empty{
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.album{
+    margin-bottom: -50px;
+}
+footer{
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
+.footer{
+    height: 50px;
+    text-align: center;
+}
+@media screen and (orientation: portrait) {
+    img.art{
+        max-width: 80%;
+    }
+}
+@media screen and (orientation: landscape) {
+    img.art {
+        max-height: 80%;
+    }
+}
+</style>
+<body>
+<div class="album">
+    <img class="art" src="{{ image_url or "/images/splash-800.jpg" }}"><br/>
+    <div class="footer"></div>
+    <footer class="footer">
+        <b>{{ name or "Jukebox Portal"}}</b><br/>
+        {{ artist or "by Dennis Mellican"}}</br>
+        </br>
+    </footer>
+</div>
+</body>

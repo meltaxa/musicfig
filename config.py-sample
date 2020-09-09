@@ -1,0 +1,40 @@
+import os
+
+# Spotify API application settings
+CLIENT_ID = ""
+CLIENT_SECRET = ""
+
+# Settings below this line can be left at their defaults.
+
+# Define the application directory
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))  
+
+with open(BASE_DIR + '/VERSION', 'r') as file:
+    VERSION = file.read().replace('\n', '')
+
+SESSION_COOKIE_DOMAIN = ""
+SERVER_NAME = "localhost"
+
+# Spotify redirect uri. The expanded var must match
+# the same in the Spotify app settings.
+REDIRECT_URI = "https://%s/callback" % SERVER_NAME
+
+# Statement for enabling the development environment
+DEBUG = True
+
+# Anonymous usage. Disable collection by setting to False. 
+USAGE = True
+USAGE_API = "cMyGJ8gqj5ms2lns7c3cAx"
+
+# Application threads. 
+THREADS_PER_PAGE = 2
+
+# Enable protection agains *Cross-site Request Forgery (CSRF)*
+CSRF_ENABLED = True
+
+# Use a secure, unique and absolutely secret key for
+# signing the data. 
+CSRF_SESSION_KEY = os.urandom(12)
+
+# Secret key for signing cookies
+SECRET_KEY = os.urandom(24)

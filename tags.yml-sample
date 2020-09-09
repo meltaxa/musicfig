@@ -1,0 +1,19 @@
+# NFC tags have unique identifiers which are assigned "Spotify URI" actions.
+identifier:
+    04831a62714080:
+        # LEGO minifigure. Play 11s into the Black Sabbath track.
+        name: Ironman
+        spotify: track:0TI8TP4FitVPoEHPTySx48
+        position_ms: 11000
+    04d5dbd2534280:
+        # LEGO minifigure. Play Lego Movie 2 soundtrack.
+        name: Everything is Awesome
+        spotify: album:7vUakEBYI3YXIoAHHRufrq
+    ea508007:
+        # NTAG213 card
+        name: Iron DJ triathlon playlist
+        spotify: playlist:2srSxWasD4ZZh4B7ckyihH
+    042c52f23d2d80:
+        # Disney Infinity character
+        name: Jack Sparrow
+        spotify: track:4AD2dterIUjNt1LFNI9Bvi

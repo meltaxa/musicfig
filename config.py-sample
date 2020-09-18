@@ -13,11 +13,11 @@ with open(BASE_DIR + '/VERSION', 'r') as file:
     VERSION = file.read().replace('\n', '')
 
 SESSION_COOKIE_DOMAIN = ""
-SERVER_NAME = "localhost"
+SERVER_NAME = "localhost:5000"
 
 # Spotify redirect uri. The expanded var must match
 # the same in the Spotify app settings.
-REDIRECT_URI = "https://%s/callback" % SERVER_NAME
+REDIRECT_URI = "http://%s/callback" % SERVER_NAME
 
 # Statement for enabling the development environment
 DEBUG = True

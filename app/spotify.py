@@ -81,7 +81,7 @@ def spotcast(spotify_uri,position_ms=0):
             if USAGE:
                 webhook.Requests.post("https://maker.ifttt.com/trigger/usage/with/key/%s" % USAGE_API,
                               {'value1': VERSION,
-                               'value2': playing',
+                               'value2': 'playing',
                                'value3': "%s." % spotify_uri})
             return 60000
         artist = row[2]
@@ -91,7 +91,7 @@ def spotcast(spotify_uri,position_ms=0):
         if USAGE:
             webhook.Requests.post("https://maker.ifttt.com/trigger/usage/with/key/%s" % USAGE_API,
                           {'value1': VERSION,
-                           'value2': playing',
+                           'value2': 'playing',
                            'value3': "%s by %s." % (name, artist)})
         return duration_ms
     return 0

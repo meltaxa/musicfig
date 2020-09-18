@@ -7,7 +7,7 @@ LEGO Dimensions pad and enjoy the audio and light show!
 </p>
 The "toys-to-life" LEGO Dimensions console game was discontinued in October 2017. 
 Now you can bring it back to life as a Raspberry Pi jukebox by connecting the USB 
-toy pad to a Raspberry Pi and running this Jukebox Portal app.
+toy pad to a Raspberry Pi and running this Jukebox Portal app.<br/>
 <p/>
 Jukebox control is not limited to LEGO minifigures. Disney Infinity 
 characters, Amiibos, Skylanders, NFC tags, stickers or cards can be assigned to a Spotify song, 
@@ -20,8 +20,6 @@ web app, the album art of the current track is displayed when associated to a Sp
 </p>
 
 # You will require
-
-and...
 
 | Hardware | NFC tags |
 | --- | --- |

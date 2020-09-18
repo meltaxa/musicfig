@@ -23,6 +23,10 @@ if [[ $PYTHON_VERSION != $REQUIRED_VERSION ]]; then
     fi
 fi
 
+# Get latest code
+echo "[INFO] Retrieve app updates"
+git pull | sed -e 's/^/[INFO] /g'
+
 echo "[INFO] Installing apt-get packages..."
 sudo apt-get -y -qq install python-usb mpg123
 
@@ -39,7 +43,7 @@ if [ ! -f ${DIR}/tags.yml ]; then
     echo "[INFO] Initial example tags.yml created. Edit this file as tag UIDs are discovered." 
     cp ${DIR}/tags.yml-sample ${DIR}/tags.yml
 fi
-if [ ! -f ${DIR}/config.yml ]; then
+if [ ! -f ${DIR}/config.py ]; then
     echo "[OPTIONAL] Edit the config.py with your Spotify API app credentials before starting."
     cp ${DIR}/config.py-sample ${DIR}/config.py
 fi

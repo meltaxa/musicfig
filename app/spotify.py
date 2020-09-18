@@ -50,6 +50,8 @@ def init_cache():
 init_cache()
 
 def pause():
+    if conf[0] == '':
+            return
     if user_token(user) is None:
             logger.error('No Spotify token found.')
             return ''
@@ -64,6 +66,8 @@ def spotcast(spotify_uri,position_ms=0):
     """
     global users
     global user
+    if conf[0] == '':
+            return 0
     if user_token(user) is None:
             logger.error('No Spotify token found.')
             return ''
@@ -136,6 +140,8 @@ def login_callback():
     return redirect('/', 307)
 
 def user_token(user):
+    if user == 'local':
+       return None
     if user is not None:
         token = users[user]
         if token.is_expiring:

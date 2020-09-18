@@ -34,10 +34,6 @@ def not_found(error):
     return render_template('404.html'), 404
 
 app.config.from_object('config')
-if app.config['USAGE']:
-    webhook.Requests.post("https://maker.ifttt.com/trigger/usage/with/key/%s" % app.config['USAGE_API'],
-                          {'value1': app.config['VERSION'],
-                           'value2': 'started.'})
 
 with app.app_context(), app.test_request_context():
     from app.spotify import spotify as spotify_module

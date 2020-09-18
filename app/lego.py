@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
 from app import webhook
+from mpg123 import Mpg123, Out123
+from mutagen.mp3 import MP3
 import app.spotify as spotify
 import app.tags as nfctags
 import binascii
 import logging
+import os
 import threading
 import time
 import random
@@ -123,6 +126,40 @@ class Base():
             args=([(duration_ms / 1000)]))
         self.lightshowThread.start()
 
+    def startMp3(self, filename):
+        t = threading.currentThread()
+        # load an mp3 file
+        mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
+        logger.info('Playing %s' % filename)
+        mp3 = Mpg123(mp3file)
+
+        audio = MP3(mp3file)
+        self.startLightshow(audio.info.length * 1000)
+
+        # use libout123 to access the sound device
+        out = Out123()
+
+        # decode mp3 frames and send them to the sound device
+        for frame in mp3.iter_frames(out.start):
+            if getattr(t, "do_run", True):
+                out.play(frame)
+        logger.info('Stopped %s' % filename)
+
+    def stopMp3(self):
+        try:
+            # Stop any currently playing mp3
+            if t.is_alive():
+                t.do_run = False
+        except Exception:
+            pass
+
+    def playMp3(self, filename):
+        global t
+        spotify.pause()
+        self.stopMp3()
+        t = threading.Thread(target = self.startMp3, args =(filename, )) 
+        t.start()
+
     def startLego(self):
         nfc = nfctags.Tags()
         nfc.load_tags()
@@ -151,6 +188,9 @@ class Base():
 
                     if (identifier in tags['identifier']):
                         # A tag has been matched
+                        if ('mp3' in tags['identifier'][identifier]):
+                            filename = tags['identifier'][identifier]['mp3']
+                            self.playMp3(filename)
                         if ('slack' in tags['identifier'][identifier]):
                             webhook.Requests.post(tags['slack_hook'],{'text': tags['identifier'][identifier]['slack']})
                         if ('spotify' in tags['identifier'][identifier]):
@@ -158,6 +198,7 @@ class Base():
                                 position_ms = int(tags['identifier'][identifier]['position_ms'])
                             except Exception:
                                 position_ms = 0
+                            self.stopMp3()
                             duration_ms = spotify.spotcast(tags['identifier'][identifier]['spotify'],
                                                            position_ms)
                             if duration_ms > 0:

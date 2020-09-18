@@ -18,8 +18,6 @@ logger = logging.getLogger(__name__)
 spotify = Blueprint('spotify', __name__)
 
 VERSION = current_app.config['VERSION']
-USAGE = current_app.config['USAGE']
-USAGE_API = current_app.config['USAGE_API']
 conf = (current_app.config['CLIENT_ID'], 
         current_app.config['CLIENT_SECRET'], 
         current_app.config['REDIRECT_URI']
@@ -51,6 +49,16 @@ def init_cache():
 
 init_cache()
 
+def pause():
+    if user_token(user) is None:
+            logger.error('No Spotify token found.')
+            return ''
+    with tkspotify.token_as(users[user]):
+        try:
+            tkspotify.playback_pause()
+        except Exception:
+            pass
+
 def spotcast(spotify_uri,position_ms=0):
     """Play a track, playlist or album on Spotify.
     """
@@ -78,21 +86,11 @@ def spotcast(spotify_uri,position_ms=0):
             row = None
             return 60000
         if row is None:
-            if USAGE:
-                webhook.Requests.post("https://maker.ifttt.com/trigger/usage/with/key/%s" % USAGE_API,
-                              {'value1': VERSION,
-                               'value2': 'playing',
-                               'value3': "%s." % spotify_uri})
             return 60000
         artist = row[2]
         name = row[3]
         duration_ms = row[4]
-        logger.info('Playing %s (%s).' % (name, duration_ms))
-        if USAGE:
-            webhook.Requests.post("https://maker.ifttt.com/trigger/usage/with/key/%s" % USAGE_API,
-                          {'value1': VERSION,
-                           'value2': 'playing',
-                           'value3': "%s by %s." % (name, artist)})
+        logger.info('Playing %s.' % name)
         return duration_ms
     return 0
 
@@ -105,10 +103,19 @@ def main():
         return redirect('/login', 307)
     return render_template("index.html", user=user)
 
+def connectLego():
+    legoThread = threading.Thread(target=lego.Base, args=())
+    legoThread.start()
+
 @spotify.route('/login', methods=['GET'])
 def login():
-    auth_url = cred.user_authorisation_url(scope=tk.scope.every)
-    return redirect(auth_url, 307)
+    if conf[0] == '':
+        session['user'] = 'local'
+        connectLego()
+        return redirect('/', 307)
+    else:
+        auth_url = cred.user_authorisation_url(scope=tk.scope.every)
+        return redirect(auth_url, 307)
 
 @spotify.route('/callback', methods=['GET'])
 def login_callback():
@@ -122,8 +129,9 @@ def login_callback():
     session['user'] = info.id
     users[info.id] = token
 
-    legoThread = threading.Thread(target=lego.Base, args=())
-    legoThread.start()
+    logger.info('Connect to Spotify')
+
+    connectLego()
 
     return redirect('/', 307)
 

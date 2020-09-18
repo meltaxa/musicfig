@@ -1,4 +1,19 @@
 #!/bin/bash
+#
+# Usage: install.sh [-u|--update]
+#          -u|--update    Performs an update of new packages and libraries only
+#
+# Default to an initial install.
+UPDATE=False
+
+# Parse parameters
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -u|--update) UPDATE=True ;;
+        -h|--help) echo "Usage: $0 [-u|--update]"; exit 0;;
+    esac
+    shift
+done
 
 err_report() {
     echo "[ERROR] on line $1"
@@ -22,7 +37,7 @@ if [[ $PYTHON_VERSION != $REQUIRED_VERSION ]]; then
 fi
 
 echo "[INFO] Installing apt-get packages..."
-sudo apt-get -y -qq install python-usb
+sudo apt-get -y -qq install python-usb mpg123
 
 echo "[INFO] Installing Python packages..."
 pip install -q -r requirements.txt
@@ -33,8 +48,10 @@ if [ ! -f /etc/udev/rules.d/99-lego.rules ]; then
     sudo udevadm control --reload-rules && sudo udevadm trigger
 fi
 
-echo "[INFO] Initial tags.yml created. You can edit this file as tag UIDs are discovered." 
-cp ${DIR}/tags.yml-sample ${DIR}/tags.yml
+if [ ! $UPDATE ]; then
+    echo "[INFO] Initial tags.yml created. You can edit this file as tag UIDs are discovered." 
+    cp ${DIR}/tags.yml-sample ${DIR}/tags.yml
 
-echo "[INFO] Edit the config.py with your Spotify API app credentials before starting."
-cp ${DIR}/config.py-sample ${DIR}/config.py
+    echo "[INFO] Edit the config.py with your Spotify API app credentials before starting."
+    cp ${DIR}/config.py-sample ${DIR}/config.py
+fi

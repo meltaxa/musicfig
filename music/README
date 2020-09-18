@@ -1,0 +1,11 @@
+Place local mp3 files in this directory.
+
+No album art is displayed, but the LEGO Dimensions lightshow 
+will run for the duration of the track.
+
+In the tags.yml file, set the identifier block with the mp3 
+field and the filename, for example:
+
+04ec806a0b4080:
+    name: Gramatik
+    mp3: justjammin.mp3

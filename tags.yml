@@ -1,0 +1,19 @@
+# NFC tags have unique identifiers which are assigned "Spotify URI" actions.
+identifier:
+    04ec806a0b4080:
+        name: Kurt
+        mp3: justjammin.mp3
+    0431da3aa24080:
+        name: Keytar
+        mp3: dbc.mp3
+    042c52f23d2d80:
+        # Disney Infinity character
+        name: Jack Sparrow
+        mp3: justjammin.mp3
+    04099bdaff3981:
+        name: Ironman
+        mp3: dbc.mp3
+    041785725d4981:
+        name: Firestarter
+        spotify: track:1GTPxha6U7x9ElVxkQw3OK
+        position_ms: 25000

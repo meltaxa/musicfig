@@ -5,3 +5,5 @@ pyusb
 pyyaml
 tekore
 requests
+mpg123
+mutagen

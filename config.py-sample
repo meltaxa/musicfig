@@ -22,10 +22,6 @@ REDIRECT_URI = "http://%s/callback" % SERVER_NAME
 # Statement for enabling the development environment
 DEBUG = True
 
-# Anonymous usage. Disable collection by setting to False. 
-USAGE = True
-USAGE_API = "cMyGJ8gqj5ms2lns7c3cAx"
-
 # Application threads. 
 THREADS_PER_PAGE = 2
 

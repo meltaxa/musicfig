@@ -113,6 +113,7 @@ def login():
 @spotify.route('/callback', methods=['GET'])
 def login_callback():
     global users
+    global display_name
     code = request.args.get('code', None)
 
     token = cred.request_user_token(code)

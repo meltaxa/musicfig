@@ -1,19 +1,8 @@
 #!/bin/bash
 #
-# Usage: install.sh [-u|--update]
-#          -u|--update    Performs an update of new packages and libraries only
+# Usage: install.sh
 #
-# Default to an initial install.
-UPDATE=False
-
-# Parse parameters
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        -u|--update) UPDATE=True ;;
-        -h|--help) echo "Usage: $0 [-u|--update]"; exit 0;;
-    esac
-    shift
-done
+# Can be run for updates too.
 
 err_report() {
     echo "[ERROR] on line $1"
@@ -48,10 +37,11 @@ if [ ! -f /etc/udev/rules.d/99-lego.rules ]; then
     sudo udevadm control --reload-rules && sudo udevadm trigger
 fi
 
-if [ ! $UPDATE ]; then
+if [ ! -f ${DIR}/tags.yml ]; then
     echo "[INFO] Initial tags.yml created. You can edit this file as tag UIDs are discovered." 
     cp ${DIR}/tags.yml-sample ${DIR}/tags.yml
-
+fi
+if [ ! -f ${DIR}/config.yml ]; then
     echo "[INFO] Edit the config.py with your Spotify API app credentials before starting."
     cp ${DIR}/config.py-sample ${DIR}/config.py
 fi

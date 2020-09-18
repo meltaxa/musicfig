@@ -36,10 +36,10 @@ if [ ! -f /etc/udev/rules.d/99-lego.rules ]; then
 fi
 
 if [ ! -f ${DIR}/tags.yml ]; then
-    echo "[INFO] Initial tags.yml created. You can edit this file as tag UIDs are discovered." 
+    echo "[INFO] Initial example tags.yml created. Edit this file as tag UIDs are discovered." 
     cp ${DIR}/tags.yml-sample ${DIR}/tags.yml
 fi
 if [ ! -f ${DIR}/config.yml ]; then
-    echo "[INFO] Edit the config.py with your Spotify API app credentials before starting."
+    echo "[OPTIONAL] Edit the config.py with your Spotify API app credentials before starting."
     cp ${DIR}/config.py-sample ${DIR}/config.py
 fi

@@ -113,7 +113,6 @@ def login():
 @spotify.route('/callback', methods=['GET'])
 def login_callback():
     global users
-    global display_name
     code = request.args.get('code', None)
 
     token = cred.request_user_token(code)
@@ -122,7 +121,6 @@ def login_callback():
 
     session['user'] = info.id
     users[info.id] = token
-    logger.info('Logged in as %s' % display_name)
 
     legoThread = threading.Thread(target=lego.Base, args=())
     legoThread.start()

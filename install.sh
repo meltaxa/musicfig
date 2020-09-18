@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# Usage: install.sh
-#
 # Can be run for updates too.
 
 err_report() {

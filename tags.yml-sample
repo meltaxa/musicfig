@@ -17,3 +17,7 @@ identifier:
         # Disney Infinity character
         name: Jack Sparrow
         spotify: track:4AD2dterIUjNt1LFNI9Bvi
+    04ec806a0b4080:
+        # LEGO minifigure. Play local mp3 file.
+        name: Gramatik
+        mp3: justjammin.mp3

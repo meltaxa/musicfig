@@ -61,6 +61,26 @@ def pause():
         except Exception:
             pass
 
+def resume():
+    if conf[0] == '':
+            return
+    if user_token(user) is None:
+            logger.error('No Spotify token found.')
+            return ''
+    sp_remaining = 60000
+    with tkspotify.token_as(users[user]):
+        try:
+            tkspotify.playback_resume()
+            song = tkspotify.playback_currently_playing()
+            sp_elapsed = song.progress_ms
+            sp_id = song.item.id
+            cursor.execute("""select duration from song where id = ?;""", (sp_id,))
+            row = cursor.fetchone()
+            sp_remaining = row[0] - sp_elapsed
+        except Exception:
+            pass
+    return sp_remaining
+
 def spotcast(spotify_uri,position_ms=0):
     """Play a track, playlist or album on Spotify.
     """

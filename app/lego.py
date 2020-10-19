@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from app import webhook
-from mpg123 import Mpg123, Out123
+#from mpg123 import Mpg123, Out123
 from mutagen.mp3 import MP3
 import app.spotify as spotify
 import app.tags as nfctags
@@ -13,6 +13,7 @@ import time
 import random
 import usb.core
 import usb.util
+import app.mp3player as mp3player
 
 logger = logging.getLogger(__name__)
 
@@ -88,7 +89,7 @@ class Dimensions():
             identifier = identifier.replace('000000','')
             removed = bool(bytelist[5])
             if removed:
-                response = 'remove:%s:%s' % (pad_num, identifier)
+                response = 'removed:%s:%s' % (pad_num, identifier)
             else:
                 response = 'added:%s:%s' % (pad_num, identifier)
             return response
@@ -127,40 +128,65 @@ class Base():
         self.lightshowThread.start()
 
     def startMp3(self, filename):
+        global p
+        global mp3_duration
         t = threading.currentThread()
         # load an mp3 file
         mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
         logger.info('Playing %s' % filename)
-        mp3 = Mpg123(mp3file)
+        p = mp3player.Player()
+        def monitor():
+            global mp3state
+            global mp3elapsed
+            while True:
+                state = p.event_queue.get(block=True, timeout=None)
+                mp3state = state[0]
+                mp3elapsed = state[1]
+
+        threading.Thread(target=monitor, daemon=True, name="monitor").start() 
+        p.open(mp3file)
+        p.play()
 
         audio = MP3(mp3file)
-        self.startLightshow(audio.info.length * 1000)
-
-        # use libout123 to access the sound device
-        out = Out123()
-
-        # decode mp3 frames and send them to the sound device
-        for frame in mp3.iter_frames(out.start):
-            if getattr(t, "do_run", True):
-                out.play(frame)
-        logger.info('Stopped %s' % filename)
+        mp3_duration = audio.info.length
+        self.startLightshow(mp3_duration * 1000)
 
     def stopMp3(self):
+        global mp3state
         try:
-            # Stop any currently playing mp3
-            if t.is_alive():
-                t.do_run = False
+            p.pause()
+            mp3state = STOPPED
+        except Exception:
+            pass
+
+    def pauseMp3(self):
+        try:
+            p.pause()
         except Exception:
             pass
 
     def playMp3(self, filename):
         global t
         spotify.pause()
-        self.stopMp3()
-        t = threading.Thread(target = self.startMp3, args =(filename, )) 
-        t.start()
+        if previous_tag == current_tag and 'PAUSED' in ("%s" % mp3state):
+            # Resume
+            logger.info("Resuming mp3 track.")
+            p.play()
+            remaining = mp3_duration - mp3elapsed
+            self.startLightshow(remaining * 1000)
+        else:
+            # New play 
+            self.pauseMp3()
+            t = threading.Thread(target = self.startMp3, args =(filename, )) 
+            t.start()
 
     def startLego(self):
+        global current_tag
+        global previous_tag
+        global mp3state
+        current_tag = None
+        previous_tag = None
+        mp3state = None
         nfc = nfctags.Tags()
         nfc.load_tags()
         self.base = Dimensions()
@@ -172,6 +198,16 @@ class Base():
                 status = tag.split(':')[0]
                 pad = int(tag.split(':')[1])
                 identifier = tag.split(':')[2]
+                if status == 'removed':
+                    if identifier == current_tag:
+                        logger.info("Pausing track.")
+                        try:
+                            self.lightshowThread.do_run = False
+                            self.lightshowThread.join()
+                        except Exception:
+                            pass
+                        self.pauseMp3()
+                        spotify.pause()
                 if status == 'added':
                     self.base.switch_pad(pad = pad, colour = self.BLUE)
 
@@ -187,6 +223,11 @@ class Base():
                         pass
 
                     if (identifier in tags['identifier']):
+                        if current_tag == None:
+                            previous_tag = identifier
+                        else:
+                            previous_tag = current_tag
+                        current_tag = identifier
                         # A tag has been matched
                         if ('mp3' in tags['identifier'][identifier]):
                             filename = tags['identifier'][identifier]['mp3']
@@ -194,6 +235,9 @@ class Base():
                         if ('slack' in tags['identifier'][identifier]):
                             webhook.Requests.post(tags['slack_hook'],{'text': tags['identifier'][identifier]['slack']})
                         if ('spotify' in tags['identifier'][identifier]):
+                            if current_tag == previous_tag:
+                                self.startLightshow(spotify.resume())
+                                continue
                             try:
                                 position_ms = int(tags['identifier'][identifier]['position_ms'])
                             except Exception:

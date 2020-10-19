@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from app import webhook
-#from mpg123 import Mpg123, Out123
 from mutagen.mp3 import MP3
 import app.spotify as spotify
 import app.tags as nfctags

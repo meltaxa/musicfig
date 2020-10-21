@@ -1,6 +1,7 @@
 import os
 
-# Spotify API application settings
+# Replace with Spotify API application settings
+# Leave blank for MP3 only mode.
 CLIENT_ID = ""
 CLIENT_SECRET = ""
 

@@ -46,12 +46,29 @@ def init_cache():
                          name text, \
                          duration integer)")
 
+def connectLego():
+    legoThread = threading.Thread(target=lego.Base, args=())
+    legoThread.start()
 
 init_cache()
+connectLego()
+
+def activated():
+    try:
+        user
+    except NameError:
+        logger.error('Spotify not activated. Visit %s' % conf[2].replace('callback',''))
+        return False
+    else:
+        return True
 
 def pause():
     if conf[0] == '':
             return
+    try:
+        user
+    except NameError:
+        return
     if user_token(user) is None:
             logger.error('No Spotify token found.')
             return ''
@@ -64,6 +81,10 @@ def pause():
 def resume():
     if conf[0] == '':
             return
+    try:
+        user
+    except NameError:
+        return 0
     if user_token(user) is None:
             logger.error('No Spotify token found.')
             return ''
@@ -88,9 +109,14 @@ def spotcast(spotify_uri,position_ms=0):
     global user
     if conf[0] == '':
             return 0
+    try:
+        user
+    except NameError:
+        logger.warn('Spotify not activated. Please visit: URL')
+        return 0
     if user_token(user) is None:
             logger.error('No Spotify token found.')
-            return ''
+            return 0
     uri = spotify_uri.split(':')
     with tkspotify.token_as(users[user]):
         try:
@@ -127,15 +153,10 @@ def main():
         return redirect('/login', 307)
     return render_template("index.html", user=user)
 
-def connectLego():
-    legoThread = threading.Thread(target=lego.Base, args=())
-    legoThread.start()
-
 @spotify.route('/login', methods=['GET'])
 def login():
     if conf[0] == '':
         session['user'] = 'local'
-        connectLego()
         return redirect('/', 307)
     else:
         auth_url = cred.user_authorisation_url(scope=tk.scope.every)
@@ -153,9 +174,7 @@ def login_callback():
     session['user'] = info.id
     users[info.id] = token
 
-    logger.info('Connect to Spotify')
-
-    connectLego()
+    logger.info('Spotify activated.')
 
     return redirect('/', 307)
 

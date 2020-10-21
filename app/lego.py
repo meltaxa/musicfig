@@ -126,25 +126,25 @@ class Base():
             args=([(duration_ms / 1000)]))
         self.lightshowThread.start()
 
-    def startMp3(self, filename):
-        global p
-        global mp3_duration
-        t = threading.currentThread()
-        # load an mp3 file
-        mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
-        logger.info('Playing %s' % filename)
-        p = mp3player.Player()
+    def initMp3(self):
+        self.p = mp3player.Player()
         def monitor():
             global mp3state
             global mp3elapsed
             while True:
-                state = p.event_queue.get(block=True, timeout=None)
-                mp3state = state[0]
+                state = self.p.event_queue.get(block=True, timeout=None)
+                mp3state = str(state[0]).replace('PlayerState.','')
                 mp3elapsed = state[1]
+            logger.info('thread exited.')
+        threading.Thread(target=monitor, name="monitor").start() 
 
-        threading.Thread(target=monitor, daemon=True, name="monitor").start() 
-        p.open(mp3file)
-        p.play()
+    def startMp3(self, filename):
+        global mp3_duration
+        # load an mp3 file
+        mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
+        logger.info('Playing %s' % filename)
+        self.p.open(mp3file)
+        self.p.play()
 
         audio = MP3(mp3file)
         mp3_duration = audio.info.length
@@ -153,36 +153,41 @@ class Base():
     def stopMp3(self):
         global mp3state
         try:
-            p.pause()
-            mp3state = STOPPED
+            #self.p.stop()
+            mp3state = 'STOPPED'
         except Exception:
             pass
 
     def pauseMp3(self):
-        try:
-            p.pause()
-        except Exception:
-            pass
+        global mp3state
+        if 'PLAYING' in mp3state:
+            self.p.pause()
+            logger.info('Track paused.')
+            mp3state = 'PAUSED'
+            return
 
     def playMp3(self, filename):
         global t
+        global mp3state
         spotify.pause()
         if previous_tag == current_tag and 'PAUSED' in ("%s" % mp3state):
             # Resume
             logger.info("Resuming mp3 track.")
-            p.play()
+            self.p.play()
             remaining = mp3_duration - mp3elapsed
-            self.startLightshow(remaining * 1000)
-        else:
-            # New play 
-            self.pauseMp3()
-            t = threading.Thread(target = self.startMp3, args =(filename, )) 
-            t.start()
+            if remaining >= 0.1:
+                self.startLightshow(remaining * 1000)
+                return
+        # New play 
+        self.stopMp3()
+        self.startMp3(filename)
+        mp3state = 'PLAYING'
 
     def startLego(self):
         global current_tag
         global previous_tag
         global mp3state
+        global p
         current_tag = None
         previous_tag = None
         mp3state = None
@@ -190,6 +195,7 @@ class Base():
         nfc.load_tags()
         self.base = Dimensions()
         logger.info("Lego Dimensions base activated.")
+        self.initMp3()
         self.base.switch_pad(0,self.GREEN)
         while True:
             tag = self.base.update_nfc()
@@ -199,14 +205,14 @@ class Base():
                 identifier = tag.split(':')[2]
                 if status == 'removed':
                     if identifier == current_tag:
-                        logger.info("Pausing track.")
                         try:
                             self.lightshowThread.do_run = False
                             self.lightshowThread.join()
                         except Exception:
                             pass
                         self.pauseMp3()
-                        spotify.pause()
+                        if spotify.activated():
+                            spotify.pause()
                 if status == 'added':
                     self.base.switch_pad(pad = pad, colour = self.BLUE)
 
@@ -233,7 +239,7 @@ class Base():
                             self.playMp3(filename)
                         if ('slack' in tags['identifier'][identifier]):
                             webhook.Requests.post(tags['slack_hook'],{'text': tags['identifier'][identifier]['slack']})
-                        if ('spotify' in tags['identifier'][identifier]):
+                        if ('spotify' in tags['identifier'][identifier]) and spotify.activated():
                             if current_tag == previous_tag:
                                 self.startLightshow(spotify.resume())
                                 continue
@@ -249,7 +255,9 @@ class Base():
                             else:
                                 self.base.flash_pad(pad = pad, on_length = 10, off_length = 10,
                                                     pulse_count = 6, colour = self.RED)
+                        if ('spotify' in tags['identifier'][identifier]) and not spotify.activated():
+                            current_tag = previous_tag
                     else:
                         # Unknown tag. Display UID.
-                        logger.info('Lego unknown tag detected: %s' % identifier)
+                        logger.info('Discovered new tag: %s' % identifier)
                         self.base.switch_pad(pad, self.RED)

@@ -88,6 +88,8 @@ class ExtOut123(mpg123.Out123):
     def resume(self):
         self._lib.out123_continue(self.handle)
 
+    def stop(self):
+        self._lib.out123_stop(self.handle)
 
 class PlayerState(Enum):
     UNINITALISED = 0

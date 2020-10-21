@@ -42,7 +42,6 @@ To play music you can use the following **options**:
 * Clone this repository and run the install.sh script.
 * Copy your mp3 files to the music folder.
 * Execute the Jukebox Portal run.py script.
-* Visit http://localhost:5000
 * Place your first tag on the pad and watch the console log as the app discovers the UID value.
 * Edit the tags.yml file accordingly with the aforementioned UID and mp3 file to be played.
 * Place the tag off and on again. 

@@ -21,3 +21,8 @@ identifier:
         # LEGO minifigure. Play local mp3 file.
         name: Gramatik
         mp3: justjammin.mp3
+    043fd8daa74881:
+        # Play TRON and run a system command.
+        name: The Grid
+        spotify: track:4Bvxi5oUS3M4DezTfsd5pp
+        command: uname -a

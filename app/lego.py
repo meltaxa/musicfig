@@ -239,6 +239,8 @@ class Base():
                             self.playMp3(filename)
                         if ('slack' in tags['identifier'][identifier]):
                             webhook.Requests.post(tags['slack_hook'],{'text': tags['identifier'][identifier]['slack']})
+                        if ('command' in tags['identifier'][identifier]):
+                            os.system(tags['identifier'][identifier]['command'])
                         if ('spotify' in tags['identifier'][identifier]) and spotify.activated():
                             if current_tag == previous_tag:
                                 self.startLightshow(spotify.resume())

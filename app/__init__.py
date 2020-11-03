@@ -32,11 +32,14 @@ stream = os.popen('git tag | tail -n 1')
 app_version = stream.read().split('\n')[0]
 
 VERSION_URL = "https://api.github.com/repos/meltaxa/jukebox-portal/releases"
-url = requests.get(VERSION_URL)
-latest_version = url.json()[0]['tag_name']
+try:
+    url = requests.get(VERSION_URL)
+    latest_version = url.json()[0]['tag_name']
 
-if latest_version != app_version:
-  logger.warn('Update %s available. Run install.sh to update.' % latest_version)
+    if latest_version != app_version:
+      logger.warn('Update %s available. Run install.sh to update.' % latest_version)
+except Exception:
+    pass
 
 app = Flask(__name__,
             static_url_path='', 

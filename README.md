@@ -14,6 +14,12 @@ During song play, the LEGO Dimensions pad will light up for the duration of the 
 For Spotify users, the album art of the currently playing track is displayed on your local Musicfig app site, as demonstrated on the 
 <a href="https://nowplaying.musicfig.com?github">https://nowplaying.musicfig.com</a> site: <p/>
 <p align="center">
+  <!--- 
+  Github will by default use it's Camo CDN to cache images (https://github.blog/2014-01-28-proxying-user-images/). 
+  To override this, on the origin web server add the header Cache-Control no-cache. Also if you are using 
+  Cloudflare set the Browser Cache TTL to respect existing headers. The nowplaying.png image is a Puppeteer 
+  screenshot and updated every 5 minutes displaying what Meltaxa is actually listening to on the Musicfig.
+  --->
   <img src="https://musicfig.com/images/nowplaying.png?github" alt="Musicfig now playing" width=60%/><br>
 Musicfig's now playing page.
 </p>
@@ -58,7 +64,7 @@ Follow these steps to install and config the Musicfig software:
 
 # Everything is Awesome!
 <p align="center">
-  <img src="https://musicfig.com/images/1.jpg" width=50%>
+  <img src="https://musicfig.com/images/1.jpg" width=80%>
 </p>
 Send feedback and photos of your Musicfigs and rigs over in the <a href="https://github.com/meltaxa/musicfig/discussions">Discussions</a>
 section.

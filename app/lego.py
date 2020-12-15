@@ -124,6 +124,7 @@ class Base():
     def startLightshow(self,duration_ms):
         self.lightshowThread = threading.Thread(target=self.randomLightshow,
             args=([(duration_ms / 1000)]))
+        self.lightshowThread.daemon = True
         self.lightshowThread.start()
 
     def initMp3(self):
@@ -136,6 +137,7 @@ class Base():
                 mp3state = str(state[0]).replace('PlayerState.','')
                 mp3elapsed = state[1]
             logger.info('thread exited.')
+        threading.Thread(target=monitor, name="monitor").daemon = True
         threading.Thread(target=monitor, name="monitor").start() 
 
     def startMp3(self, filename):

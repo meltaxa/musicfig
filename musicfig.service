@@ -1,0 +1,12 @@
+[Unit]
+    Description=Musicfig
+    After=network.target
+
+[Service]
+    User=pi
+    Group=pi
+    WorkingDirectory=/home/pi/github/jukebox-portal
+    ExecStart=/home/pi/venv/bin/python /home/pi/github/jukebox-portal/run.py
+
+[Install]
+    WantedBy=multi-user.target

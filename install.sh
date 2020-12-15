@@ -47,3 +47,11 @@ if [ ! -f ${DIR}/config.py ]; then
     echo "[OPTIONAL] Edit the config.py with your Spotify API app credentials before starting."
     cp ${DIR}/config.py-sample ${DIR}/config.py
 fi
+
+# Install startup service
+sudo cp musicfig.service /etc/systemd/system
+sudo chown root:root /etc/systemd/system/musicfig.service
+sudo chmod 644 /etc/systemd/system/musicfig.service
+sudo systemctl daemon-reload
+sudo systemctl enable musicfig.service
+sudo systemctl restart musicfig.service

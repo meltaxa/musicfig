@@ -12,6 +12,9 @@ import os
 import sqlite3
 import tekore as tk
 import threading
+import subprocess
+import requests
+import unidecode
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +32,9 @@ users = {}
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 cache_lock = threading.Lock()
+
+last_played = 'unknown'
+last_out = ''
 
 def init_cache():
     """Use a database to store song meta data to reduce API calls.
@@ -48,6 +54,7 @@ def init_cache():
 
 def connectLego():
     legoThread = threading.Thread(target=lego.Base, args=())
+    legoThread.daemon = True
     legoThread.start()
 
 init_cache()
@@ -57,7 +64,6 @@ def activated():
     try:
         user
     except NameError:
-        logger.error('Spotify not activated. Visit %s' % conf[2].replace('callback',''))
         return False
     else:
         return True
@@ -112,7 +118,7 @@ def spotcast(spotify_uri,position_ms=0):
     try:
         user
     except NameError:
-        logger.warn('Spotify not activated. Please visit: URL')
+        logger.warn('Tag detected but Spotify is not activated. Please visit %s' % conf[2].replace('callback',''))
         return 0
     if user_token(user) is None:
             logger.error('No Spotify token found.')
@@ -199,6 +205,8 @@ def nowplaying():
             return ''
     except Exception:
         return ''
+    global last_played
+    global last_out
     with tkspotify.token_as(users[user]):
         try:
             song = tkspotify.playback_currently_playing()
@@ -221,11 +229,11 @@ def nowplaying():
             track = tkspotify.track(song.item.id)
             images_url = track.album.images
             image_url = images_url[0].url
-            name = track.name
+            name = unidecode.unidecode(track.name)
             duration_ms = track.duration_ms
             artists = ''
             for item in track.artists:
-                artists += item.name + ', '
+                artists += unidecode.unidecode(item.name) + ', '
             artist = artists[:-2]
             cursor.execute("""insert into song values (?,?,?,?,?);""", 
                 (song.item.id,image_url,artist,name,duration_ms))
@@ -233,10 +241,16 @@ def nowplaying():
         else:
             song.item.id = row[0]
             image_url = row[1]
-            artist = row[2]
-            name = row[3]
+            artist = unidecode.unidecode(row[2])
+            name = unidecode.unidecode(row[3])
             duration_ms = row[4]
-        return render_template("nowplaying.html", 
+        out = last_out
+        if song.item.id != last_played:
+          out = render_template("nowplaying.html", 
+                               spotify_id=song.item.id,
                                image_url=image_url, 
                                artist=artist, 
                                name=name)
+          last_played = song.item.id
+          last_out = out
+        return out

@@ -2,21 +2,36 @@
 function title(text) {
     document.title = text;
 }
-title("{{ name or 'Jukebox Portal' }}")
+title("{{ name or 'Musicfig' }}")
 </script>
 <style type="text/css">
+{
+  overflow: scroll;
+  /*overflow-x: hidden;*/
+}
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+}
+body::before{
+    background: url({{ image_url or "/images/splash-800.jpg" }}) 0 / cover fixed;
+    content: '';
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    filter: blur(20px);
+    transform: scale(1.03);
+}
 body{
-    background-image: url({{ image_url or "/images/splash-800.jpg" }});
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    backdrop-filter: blur(10px);
     margin: 0;
     padding: 0;
     font-family:Helvetica;
     text-shadow: 0px 0px 2px #000;
     color: #fff;
     height: 100%;
+    position: relative;
 }
 img.art{
     position: absolute;
@@ -24,6 +39,7 @@ img.art{
     top: 10%;
     left: 10%;
     border-radius: 3px;
+    cursor: none;
 }
 img.art:empty{
     top: 50%;
@@ -62,9 +78,10 @@ footer{
     <img class="art" src="{{ image_url or "/images/splash-800.jpg" }}"><br/>
     <div class="footer"></div>
     <footer class="footer">
-        <b>{{ name or "Jukebox Portal"}}</b><br/>
+        <b>{{ name or "Musicfig"}}</b><br/>
         {{ artist or "by Dennis Mellican"}}</br>
         </br>
+<!--IFRAME-->
     </footer>
 </div>
 </body>

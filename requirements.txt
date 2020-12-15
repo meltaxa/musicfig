@@ -7,3 +7,4 @@ tekore
 requests
 mpg123
 mutagen
+unidecode

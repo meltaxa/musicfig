@@ -1,23 +1,21 @@
-# Jukebox Portal
-
-Listen to songs, albums or playlists by placing a LEGO minifigure on the 
-LEGO Dimensions pad and enjoy the audio and light show!
+# Musicfig
+<p/>
+Make your LEGO Minifigures play music using a Raspberry Pi and a LEGO Dimensions toy pad.
 <p align="center">
-  <img src="https://cdn-images-1.medium.com/max/800/1*v3m7mg7Y_Vzy2y8O8gKXMQ.jpeg" alt="Jukebox Portal close up"/>
+  <img src="https://cdn-images-1.medium.com/max/800/1*v3m7mg7Y_Vzy2y8O8gKXMQ.jpeg" alt="Musicfig rig"/>
 </p>
-The "toys-to-life" LEGO Dimensions console game was discontinued in October 2017. 
-Now you can bring it back to life as a Raspberry Pi jukebox by connecting the USB 
-toy pad to a Raspberry Pi and running this Jukebox Portal app.
 <p/>
+Leveraging the NFC chip in a LEGO Dimensions tag, Minifigues can be assigned songs and cue music like a jukebox.
 <p/>
-Jukebox control is not limited to LEGO minifigures. Disney Infinity 
-characters, Amiibos, Skylanders, NFC tags, stickers or cards can be assigned to a Spotify song, 
-album or playlist too.
-
-While the light show plays for the duration of the track, on the Jukebox Portal 
-web app, the album art of the current track is displayed when associated to a Spotify account. 
+Jukebox control is not limited to LEGO minifigures. Disney Infinity characters, Amiibos, Skylanders, NFC tags, stickers or cards can become a Musicfig.
+<p/>
+During song play, the LEGO Dimensions pad will light up for the duration of the song.
+<p/>
+For Spotify users, the album art of the currently playing track is displayed on your local Musicfig app site, as demonstrated on the 
+<a href="https://nowplaying.musicfig.com?github">https://nowplaying.musicfig.com</a> site: <p/>
 <p align="center">
-  <img src="https://cdn-images-1.medium.com/max/640/1*A4Dv2PbAeniEmNKmR2469g.png" alt="Jukebox Portal screen shot"/>
+  <img src="https://musicfig.com/images/nowplaying.png?github" alt="Musicfig now playing" width=60%/><br>
+Musicfig's now playing page.
 </p>
 
 # You will require
@@ -28,9 +26,9 @@ web app, the album art of the current track is displayed when associated to a Sp
 
 To play music you can use the following **options**:
 
-* A Spotify Premium subscription account. For an enhanced experience, Spotify is recommended but not required.
+* MP3 files;
 
-* MP3 files. 
+* A Spotify Premium subscription account. For an enhanced experience, Spotify is recommended but not required.
 
 # Install
 
@@ -38,15 +36,29 @@ To play music you can use the following **options**:
 
 # Quick Install (without Spotify)
 
+This allows Musicfig to play in offline mode, by accessing local MP3 files. 
+
+Firstly, connect your LEGO Dimensions toy pad to the Raspberry Pi via the USB port.
+
+Now connect the speakers to the Raspberry Pi.
+
+Follow these steps to install and config the Musicfig software:
+
 * Install Python 3.8+.
-* Clone this repository and run the install.sh script.
+* Clone this repository and run the install.sh script. Musicfig will start automatically.
 * Copy your mp3 files to the music folder.
-* Execute the Jukebox Portal run.py script.
-* Place your first tag on the pad and watch the console log as the app discovers the UID value.
-* Edit the tags.yml file accordingly with the aforementioned UID and mp3 file to be played.
+* Place your first tag on the pad and watch the system console log as the app discovers the UID value.
+* Edit the tags.yml file with the UID and the mp3 file to be played.
 * Place the tag off and on again. 
 * A track should now start playing locally.
 
 # Updating
 
-* Pull the latest code from the repository and run the install.sh script.
+* Re-run the install.sh script to pull down the latest code. 
+
+# Everything is Awesome!
+<p align="center">
+  <img src="https://musicfig.com/images/1.jpg" width=50%>
+</p>
+Send feedback and photos of your Musicfigs and rigs over in the <a href="https://github.com/meltaxa/musicfig/discussions">Discussions</a>
+section.

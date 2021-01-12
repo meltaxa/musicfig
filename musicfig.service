@@ -5,8 +5,8 @@
 [Service]
     User=pi
     Group=pi
-    WorkingDirectory=/home/pi/github/jukebox-portal
-    ExecStart=/home/pi/venv/bin/python /home/pi/github/jukebox-portal/run.py
+    WorkingDirectory=%MUSICFIG_DIR%
+    ExecStart=%PYTHON_PATH% %MUSICFIG_DIR%/run.py
 
 [Install]
     WantedBy=multi-user.target

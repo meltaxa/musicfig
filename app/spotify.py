@@ -20,7 +20,6 @@ logger = logging.getLogger(__name__)
 
 spotify = Blueprint('spotify', __name__)
 
-VERSION = current_app.config['VERSION']
 conf = (current_app.config['CLIENT_ID'], 
         current_app.config['CLIENT_SECRET'], 
         current_app.config['REDIRECT_URI']

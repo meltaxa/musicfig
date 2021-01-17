@@ -51,8 +51,8 @@ fi
 # Install startup service
 PYTHON_PATH=$(which python)
 MUSICFIG_DIR=$(pwd)
-sed -i "s/%MUSICFIG_DIR%/${MUSICFIG_DIR}/ig" musicfig.service
-sed -i "s/%PYTHON_PATH%/${PYTHON_PATH}/ig" musicfig.service
+sed -i "s!%MUSICFIG_DIR%!${MUSICFIG_DIR}!ig" musicfig.service
+sed -i "s!%PYTHON_PATH%!${PYTHON_PATH}!ig" musicfig.service
 sudo cp musicfig.service /etc/systemd/system
 sudo chown root:root /etc/systemd/system/musicfig.service
 sudo chmod 644 /etc/systemd/system/musicfig.service

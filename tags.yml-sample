@@ -1,3 +1,6 @@
+# Ligthshow switch
+lights: on
+
 # NFC tags have unique identifiers which are assigned "Spotify URI" actions.
 identifier:
     04831a62714080:

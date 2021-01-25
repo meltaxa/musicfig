@@ -1,0 +1,5 @@
+__pycache__/
+app/.cache/
+config.py
+musicfig.log
+tags.yml

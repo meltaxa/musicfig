@@ -111,7 +111,7 @@ class Base():
         self.base = self.startLego()
 
     def randomLightshow(self,duration = 60):
-        logger.info("Lego light show started for %s seconds" % duration)
+        logger.info("Lightshow started for %s seconds." % duration)
         self.lightshowThread = threading.currentThread()
         t = time.perf_counter()
         while getattr(self.lightshowThread, "do_run", True) and (time.perf_counter() - t) < duration:
@@ -122,10 +122,11 @@ class Base():
         self.base.switch_pad(0,self.OFF)
 
     def startLightshow(self,duration_ms):
-        self.lightshowThread = threading.Thread(target=self.randomLightshow,
-            args=([(duration_ms / 1000)]))
-        self.lightshowThread.daemon = True
-        self.lightshowThread.start()
+        if switch_lights:
+            self.lightshowThread = threading.Thread(target=self.randomLightshow,
+                args=([(duration_ms / 1000)]))
+            self.lightshowThread.daemon = True
+            self.lightshowThread.start()
 
     def initMp3(self):
         self.p = mp3player.Player()
@@ -144,7 +145,7 @@ class Base():
         global mp3_duration
         # load an mp3 file
         mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
-        logger.info('Playing %s' % filename)
+        logger.info('Playing %s.' % filename)
         self.p.open(mp3file)
         self.p.play()
 
@@ -190,15 +191,25 @@ class Base():
         global previous_tag
         global mp3state
         global p
+        global switch_lights
         current_tag = None
         previous_tag = None
         mp3state = None
         nfc = nfctags.Tags()
         nfc.load_tags()
+        tags = nfc.tags
         self.base = Dimensions()
         logger.info("Lego Dimensions base activated.")
         self.initMp3()
-        self.base.switch_pad(0,self.GREEN)
+        try:
+            switch_lights = tags['lights']
+        except Exception:
+            switch_lights = True
+        logger.info('Lightshow is %s' % switch_lights) #("disabled", "enabled")[switch_lights])
+        if switch_lights:
+            self.base.switch_pad(0,self.GREEN)
+        else:
+            self.base.switch_pad(0,self.OFF)
         while True:
             tag = self.base.update_nfc()
             if tag:
@@ -216,7 +227,8 @@ class Base():
                         if spotify.activated():
                             spotify.pause()
                 if status == 'added':
-                    self.base.switch_pad(pad = pad, colour = self.BLUE)
+                    if switch_lights:
+                        self.base.switch_pad(pad = pad, colour = self.BLUE)
 
                     # Reload the tags config file
                     nfc.load_tags()
@@ -242,7 +254,9 @@ class Base():
                         if ('slack' in tags['identifier'][identifier]):
                             webhook.Requests.post(tags['slack_hook'],{'text': tags['identifier'][identifier]['slack']})
                         if ('command' in tags['identifier'][identifier]):
-                            os.system(tags['identifier'][identifier]['command'])
+                            command = tags['identifier'][identifier]['command']
+                            logger.info('Running command %s' % command)
+                            os.system(command)
                         if ('spotify' in tags['identifier'][identifier]) and spotify.activated():
                             if current_tag == previous_tag:
                                 self.startLightshow(spotify.resume())

@@ -33,8 +33,18 @@ Musicfig's now playing page.
 To play music you can use the following **options**:
 
 * MP3 files;
-
 * A Spotify Premium subscription account. For an enhanced experience, Spotify is recommended but not required.
+
+# Feature list
+
+* Support LEGO Dimensions toy pads for PlayStation and Wii.
+* A lightshow will display on the LEGO Dimensions pad during song play.
+    * The lightshow can be enabled or disabled via the tags.yml file. Default: lights = on.
+* Play MP3 files.
+* Play Spotify music.
+    * The Musicfig web application will show in real time the currently playing Spotify track's album art.
+* Musicfig allows automatic offline mode, for only MP3 music playing.
+* Removing an active tag during song play will pause the track. Adding it back will resume play.
 
 # Install
 
@@ -53,10 +63,22 @@ Follow these steps to install and config the Musicfig software:
 * Install Python 3.8+.
 * Clone this repository and run the install.sh script. Musicfig will start automatically.
 * Copy your mp3 files to the music folder.
-* Place your first tag on the pad and watch the system console log as the app discovers the UID value.
+* Place your first tag on the pad and watch the console or musicfig.log as the app discovers the UID value.
 * Edit the tags.yml file with the UID and the mp3 file to be played.
 * Place the tag off and on again. 
 * A track should now start playing locally.
+
+# Stopping and Starting
+
+To stop Musicfig:
+```
+sudo systemctl stop musicfig
+```
+
+To Start Musicfig:
+```
+sudo systemctl start musicfig
+```
 
 # Updating
 

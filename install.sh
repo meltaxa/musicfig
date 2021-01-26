@@ -51,11 +51,15 @@ fi
 # Install startup service
 PYTHON_PATH=$(which python)
 MUSICFIG_DIR=$(pwd)
-sed -i "s!%MUSICFIG_DIR%!${MUSICFIG_DIR}!ig" musicfig.service
-sed -i "s!%PYTHON_PATH%!${PYTHON_PATH}!ig" musicfig.service
-sudo cp musicfig.service /etc/systemd/system
+cp musicfig.service musicfig.service-temp
+sed -i "s!%MUSICFIG_DIR%!${MUSICFIG_DIR}!ig" musicfig.service-temp
+sed -i "s!%PYTHON_PATH%!${PYTHON_PATH}!ig" musicfig.service-temp
+sudo cp musicfig.service-temp /etc/systemd/system/musicfig.service
+rm -f musicfig.service-temp
 sudo chown root:root /etc/systemd/system/musicfig.service
 sudo chmod 644 /etc/systemd/system/musicfig.service
 sudo systemctl daemon-reload
 sudo systemctl enable musicfig.service
+echo "[INFO] Starting Musicfig server"
 sudo systemctl restart musicfig.service
+echo "[INFO] See the musicfig.log file for application logs."

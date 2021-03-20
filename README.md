@@ -68,6 +68,39 @@ Follow these steps to install and config the Musicfig software:
 * Place the tag off and on again. 
 * A track should now start playing locally.
 
+# Using Docker
+
+A Musicfig docker image is available from Docker hub. Before using the image, you will need to bootstrap
+the Raspberry Pi to configure the LEGO usb device which the container will need access to:
+
+```
+curl -L https://raw.githubusercontent.com/meltaxa/musicfig/master/install.sh | bash -s -- --docker
+```
+
+The bootstrap script also downloaded two example config.py and tags.yml files. Place these in a directory
+of your choosing, say /home/pi/musicfig and update these files accordingly. See the complete installation 
+instructions in the Medium article 
+"[My LEGO Minifigures Play Spotify](https://medium.com/@mellican/my-lego-minifigures-play-spotify-dc397e83280e)" 
+for related Spotify and configuration steps.
+
+Next, find the USB bus and device mappings. Look for Id "0e6f:0241":
+```
+lsusb | grep 0e6f:0241
+```
+
+Example output:
+```
+Bus 001 Device 008: ID 0e6f:0241 Logic3 
+```
+
+When running Docker, the device path will correspond to the bus and device numbers. For example, Bus 001 and Device 008 would correspond to: /dev/bus/usb/001/008.
+
+Run Docker:
+```
+docker run -v <path/to/musicfig>:/musicfig -p 5000:5000 --device=/dev/bus/usb/<bus>/<device> --device=/dev/snd meltaxa/musicfig
+```
+The /path/to/musicfig is the directory where you store the config.py and tags.yml files.
+
 # Stopping and Starting
 
 To stop Musicfig:

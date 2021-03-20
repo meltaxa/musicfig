@@ -22,7 +22,7 @@ err_report() {
 
 trap 'err_report $LINENO' ERR
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DIR="$(pwd)"
 
 check_python_version() {
     # Check Python version
@@ -67,12 +67,16 @@ setup_usb() {
 }
 
 setup_files() {
+    if [[ "$DOCKER" ]]; then
+        curl -s -O https://raw.githubusercontent.com/meltaxa/musicfig/master/config.py-sample
+        curl -s -O https://raw.githubusercontent.com/meltaxa/musicfig/master/tags.yml-sample
+    fi
     if [ ! -f ${DIR}/tags.yml ]; then
-        echo "[INFO] Initial example tags.yml created. Edit this file as tag UIDs are discovered." 
+        echo "[INFO] Initial example ${DIR}/tags.yml created. Edit this file as tag UIDs are discovered." 
         cp ${DIR}/tags.yml-sample ${DIR}/tags.yml
     fi
     if [ ! -f ${DIR}/config.py ]; then
-        echo "[OPTIONAL] Edit the config.py with your Spotify API app credentials before starting."
+        echo "[OPTIONAL] Edit the ${DIR}/config.py with your Spotify API app credentials before starting."
         cp ${DIR}/config.py-sample ${DIR}/config.py
     fi
 }

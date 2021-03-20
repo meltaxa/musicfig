@@ -8,6 +8,9 @@ on:
       - master
       - dev
       - "feature/*"
+  release:
+    types:
+      - created
 
 jobs:
   release:

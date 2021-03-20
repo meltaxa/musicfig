@@ -77,13 +77,13 @@ the Raspberry Pi to configure the LEGO usb device which the container will need 
 curl -L https://raw.githubusercontent.com/meltaxa/musicfig/master/install.sh | bash -s -- --docker
 ```
 
-The bootstrap script also downloaded two example config.py and tags.yml files. Place these in a directory
-of your choosing, say /home/pi/musicfig and update these files accordingly. See the complete installation 
+The bootstrap script also downloads the example config.py and tags.yml files. Place these in a directory
+of your choosing, say /home/pi/musicfig and update these files accordingly. See the complete install
 instructions in the Medium article 
 "[My LEGO Minifigures Play Spotify](https://medium.com/@mellican/my-lego-minifigures-play-spotify-dc397e83280e)" 
-for related Spotify and configuration steps.
+for Spotify configuration steps.
 
-Next, find the USB bus and device mappings. Look for Id "0e6f:0241":
+Next, find the USB bus and device mappings for the LEGO pad. Make sure it is plugged in. Look for Id "0e6f:0241":
 ```
 lsusb | grep 0e6f:0241
 ```

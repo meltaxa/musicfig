@@ -2,12 +2,16 @@
 
 import os
 import yaml
+from pathlib import Path
 
 class Tags():
 
     def __init__(self):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        self.tags_file = current_dir + '/../tags.yml'
+        if Path(current_dir + '/../tags.yml').is_file():
+            self.tags_file = current_dir + '/../tags.yml'
+        if Path('/config/tags.yml').is_file():
+            self.tags_file = '/config/tags.yml'
         self.last_updated = ''
 
     def load_tags(self):

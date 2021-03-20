@@ -8,6 +8,6 @@ RUN apt-get update && \
 
 RUN pip3 install --upgrade pip wheel && pip3 install --upgrade -r requirements.txt
 
-ENV PYTHONPATH="/musicfig:$PYTHONPATH"
+ENV PYTHONPATH="/config:$PYTHONPATH"
 
 CMD ["python3", "run.py"]

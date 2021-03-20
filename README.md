@@ -97,9 +97,9 @@ When running Docker, the device path will correspond to the bus and device numbe
 
 Run Docker:
 ```
-docker run -v <path/to/musicfig>:/musicfig -p 5000:5000 --device=/dev/bus/usb/<bus>/<device> --device=/dev/snd meltaxa/musicfig
+docker run -v <path/to/configs>:/config -p 5000:5000 --device=/dev/bus/usb/<bus>/<device> --device=/dev/snd meltaxa/musicfig
 ```
-The /path/to/musicfig is the directory where you store the config.py and tags.yml files.
+The /path/to/configs is the directory where you store the config.py and tags.yml files.
 
 # Stopping and Starting
 

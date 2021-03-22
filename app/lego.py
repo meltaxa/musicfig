@@ -155,8 +155,8 @@ class Base():
             self.startLightshow(mp3_duration * 1000)
         else:
             mp3_time = 0
+            self.p.playlist(filename)
             for mp3file in filename:
-                self.p.open(mp3file)
                 audio = MP3(mp3file)
                 mp3_time = mp3_time + audio.info.length
                 logger.info(f"mp3file::{mp3file}")

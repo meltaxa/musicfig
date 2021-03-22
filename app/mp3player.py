@@ -107,6 +107,7 @@ class Player:
         LOAD = 1,
         PLAY = 2,
         PAUSE = 3,
+        PLAYLIST = 4,
         SEEK = 5
 
     class IllegalStateException(Exception):
@@ -172,7 +173,8 @@ class Player:
 
                 if self._current_state in [PlayerState.PLAYING]:
                     self._play()
-
+            elif command[0] == Player.Command.PLAYLIST:
+                print(f"command1::{command[1]}")
             else:
                 # what happened?
                 pass
@@ -216,3 +218,6 @@ class Player:
 
     def seek(self, tsec):
         self.command_queue.put((Player.Command.SEEK, tsec))
+
+    def playlist(self, filename_list):
+        self.command_queue.put((Player.Command.PLAYLIST, filename_list))

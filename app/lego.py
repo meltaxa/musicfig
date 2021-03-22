@@ -263,7 +263,7 @@ class Base():
                         # A tag has been matched
                         if ('playlist' in tags['identifier'][identifier]):
                             playlist = tags['identifier'][identifier]['playlist']
-                            self.playPlaylist(filename)
+                            self.playPlaylist(playlist)
                         if ('mp3' in tags['identifier'][identifier]):
                             filename = tags['identifier'][identifier]['mp3']
                             self.playMp3(filename)

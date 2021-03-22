@@ -161,7 +161,7 @@ class Base():
                 mp3_time = mp3_time + audio.info.length
                 logger.info(f"mp3file::{mp3file}")
                 logger.info('Playing %s.' % filename)
-            self.p.play()
+            ##self.p.play()
             self.startLightshow(mp3_time * 1000)
 
     def stopMp3(self):

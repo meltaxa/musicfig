@@ -130,6 +130,7 @@ class Player:
     def _run_player(self):
         while True:
             command = self.command_queue.get(block=True, timeout=None)
+            logger.info(f"command::{command}")
             if command[0] == Player.Command.LOAD:
                 if self._current_state in [PlayerState.PLAYING]:
                     self.out.pause()

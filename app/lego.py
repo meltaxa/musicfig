@@ -194,14 +194,17 @@ class Base():
 
     def playPlaylist(self, playlist_filename):
         global mp3state
+        list_mp3_to_play = []
         spotify.pause()
+        # New play
         self.stopMp3()
         mp3list = '/home/pi/Music/' + playlist_filename + '/*.mp3'
         logger.info(f"mp3list::{mp3list}")
         for mp3song in glob.glob(mp3list):
-            logger.info("Playing..."+mp3song)
-            self.startMp3(mp3song, True)
-            mp3state = 'PLAYING'
+            list_mp3_to_play.append(mp3song)
+
+        self.startMp3(random.choice(list_mp3_to_play), True)
+        mp3state = 'PLAYING'
 
     def startLego(self):
         global current_tag

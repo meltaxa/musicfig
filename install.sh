@@ -28,7 +28,7 @@ check_python_version() {
     # Check Python version
     [[ "$DOCKER" ]] && return
     echo "[INFO] Checking Python version..."
-    PYTHON_VERSION=$(python --version | awk '{ print $NF }')
+    PYTHON_VERSION=$(python3 --version | awk '{ print $NF }')
     REQUIRED_VERSION="3.8.5"
     if [[ $PYTHON_VERSION != $REQUIRED_VERSION ]]; then
         min=$(echo $PYTHON_VERSION $REQUIRED_VERSION| awk '{if ($1 < $2) print $1; else print $2}')

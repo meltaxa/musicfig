@@ -234,6 +234,7 @@ class Base():
             tag = self.base.update_nfc()
             if tag:
                 status = tag.split(':')[0]
+                logger.info(f"status::{status}")
                 pad = int(tag.split(':')[1])
                 identifier = tag.split(':')[2]
                 if status == 'removed':

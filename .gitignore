@@ -3,3 +3,6 @@ app/.cache/
 config.py
 musicfig.log
 tags.yml
+.idea/
+.DS_Store
+env/

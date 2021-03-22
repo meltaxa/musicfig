@@ -146,8 +146,10 @@ class Base():
         global mp3_duration
         # load an mp3 file
         basepath = os.path.dirname(os.path.abspath(__file__)) + '/../music/'
+        logger.info(f"basepath::{basepath}")
         filename = filename.replace(basepath, '')
         mp3file = basepath + filename
+        logger.info(f"mp3file::{mp3file}")
         logger.info('Playing %s.' % filename)
         self.p.open(mp3file)
         self.p.play()
@@ -194,6 +196,7 @@ class Base():
         spotify.pause()
         self.stopMp3()
         mp3list = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + playlist_filename + '*.mp3'
+        logger.info(f"mp3list::{mp3list}")
         for mp3song in glob.glob(mp3list):
             logger.info("Playing..."+mp3song)
             self.startMp3(mp3song)

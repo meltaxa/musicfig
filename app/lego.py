@@ -14,7 +14,6 @@ import usb.core
 import usb.util
 import app.mp3player as mp3player
 import glob
-from playsound import playsound
 
 logger = logging.getLogger(__name__)
 

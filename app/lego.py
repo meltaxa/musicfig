@@ -142,13 +142,13 @@ class Base():
         threading.Thread(target=monitor, name="monitor").daemon = True
         threading.Thread(target=monitor, name="monitor").start() 
 
-    def startMp3(self, filename):
+    def startMp3(self, filename, is_playlist=False):
         global mp3_duration
         # load an mp3 file
-        basepath = os.path.dirname(os.path.abspath(__file__)) + '/../music/'
-        logger.info(f"basepath::{basepath}")
-        filename = filename.replace(basepath, '')
-        mp3file = basepath + filename
+        if not is_playlist:
+            mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
+        else:
+            mp3file = filename
         logger.info(f"mp3file::{mp3file}")
         logger.info('Playing %s.' % filename)
         self.p.open(mp3file)
@@ -195,11 +195,11 @@ class Base():
         global mp3state
         spotify.pause()
         self.stopMp3()
-        mp3list = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + playlist_filename + '*.mp3'
+        mp3list = '/home/pi/Music/' + playlist_filename + '/*.mp3'
         logger.info(f"mp3list::{mp3list}")
         for mp3song in glob.glob(mp3list):
             logger.info("Playing..."+mp3song)
-            self.startMp3(mp3song)
+            self.startMp3(mp3song, True)
             mp3state = 'PLAYING'
 
     def startLego(self):

@@ -154,14 +154,15 @@ class Base():
             mp3_duration = audio.info.length
             self.startLightshow(mp3_duration * 1000)
         else:
+            mp3_time = 0
             for mp3file in filename:
                 self.p.open(mp3file)
                 audio = MP3(mp3file)
-                mp3_duration = mp3_duration + audio.info.length
+                mp3_time = mp3_time + audio.info.length
                 logger.info(f"mp3file::{mp3file}")
                 logger.info('Playing %s.' % filename)
             self.p.play()
-            self.startLightshow(mp3_duration * 1000)
+            self.startLightshow(mp3_time * 1000)
 
     def stopMp3(self):
         global mp3state

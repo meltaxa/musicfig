@@ -147,17 +147,21 @@ class Base():
         # load an mp3 file
         if not is_playlist:
             mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
-        else:
-            mp3file = filename
-        logger.info(f"mp3file::{mp3file}")
-        logger.info('Playing %s.' % filename)
-        self.p.open(mp3file)
-        self.p.play()
+            self.p.open(mp3file)
+            self.p.play()
 
-        audio = MP3(mp3file)
-        mp3_duration = audio.info.length
-        self.startLightshow(mp3_duration * 1000)
-        ##time.sleep(mp3_duration)
+            audio = MP3(mp3file)
+            mp3_duration = audio.info.length
+            self.startLightshow(mp3_duration * 1000)
+        else:
+            for mp3file in filename:
+                self.p.open(mp3file)
+                audio = MP3(mp3file)
+                mp3_duration = mp3_duration + audio.info.length
+                logger.info(f"mp3file::{mp3file}")
+                logger.info('Playing %s.' % filename)
+            self.p.play()
+            self.startLightshow(mp3_duration * 1000)
 
     def stopMp3(self):
         global mp3state
@@ -203,7 +207,8 @@ class Base():
         for mp3song in glob.glob(mp3list):
             list_mp3_to_play.append(mp3song)
 
-        self.startMp3(random.choice(list_mp3_to_play), True)
+        ##self.startMp3(random.choice(list_mp3_to_play), True)
+        self.startMp3(list_mp3_to_play, True)
         mp3state = 'PLAYING'
 
     def startLego(self):

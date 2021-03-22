@@ -116,7 +116,7 @@ class Player:
         self.mp3 = ExtMpg123()
         self.out = ExtOut123()
 
-        self.command_queue = queue.Queue(maxsize=1)
+        self.command_queue = queue.Queue()
         self.event_queue = queue.Queue()
 
         self._current_state = PlayerState.INITALISED

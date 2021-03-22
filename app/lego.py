@@ -157,7 +157,7 @@ class Base():
         audio = MP3(mp3file)
         mp3_duration = audio.info.length
         self.startLightshow(mp3_duration * 1000)
-        time.sleep(mp3_duration)
+        ##time.sleep(mp3_duration)
 
     def stopMp3(self):
         global mp3state

@@ -5,6 +5,9 @@ from enum import Enum
 import threading
 import queue
 import mpg123
+import logging
+
+logger = logging.getLogger(__name__)
 
 class mpg123_frameinfo(ctypes.Structure):
     _fields_ = [
@@ -174,7 +177,7 @@ class Player:
                 if self._current_state in [PlayerState.PLAYING]:
                     self._play()
             elif command[0] == Player.Command.PLAYLIST:
-                print(f"command1::{command[1]}")
+                logger.info(f"command1::{command[1]}")
             else:
                 # what happened?
                 pass

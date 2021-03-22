@@ -84,7 +84,7 @@ setup_files() {
 install_startup() {
     [[ "$DOCKER" ]] && return
     # Install startup service
-    PYTHON_PATH=$(which python)
+    PYTHON_PATH=$(which python3)
     MUSICFIG_DIR=$(pwd)
     cp musicfig.service musicfig.service-temp
     sed -i "s!%MUSICFIG_DIR%!${MUSICFIG_DIR}!ig" musicfig.service-temp

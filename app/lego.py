@@ -13,6 +13,8 @@ import random
 import usb.core
 import usb.util
 import app.mp3player as mp3player
+import glob
+from playsound import playsound
 
 logger = logging.getLogger(__name__)
 
@@ -144,7 +146,9 @@ class Base():
     def startMp3(self, filename):
         global mp3_duration
         # load an mp3 file
-        mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
+        basepath = os.path.dirname(os.path.abspath(__file__)) + '/../music/'
+        filename = filename.replace(basepath, '')
+        mp3file = basepath + filename
         logger.info('Playing %s.' % filename)
         self.p.open(mp3file)
         self.p.play()
@@ -185,6 +189,16 @@ class Base():
         self.stopMp3()
         self.startMp3(filename)
         mp3state = 'PLAYING'
+
+    def playPlaylist(self, playlist_filename):
+        global mp3state
+        spotify.pause()
+        self.stopMp3()
+        mp3list = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + playlist_filename + '*.mp3'
+        for mp3song in glob.glob(mp3list):
+            logger.info("Playing..."+mp3song)
+            self.startMp3(mp3song)
+            mp3state = 'PLAYING'
 
     def startLego(self):
         global current_tag
@@ -248,6 +262,9 @@ class Base():
                             previous_tag = current_tag
                         current_tag = identifier
                         # A tag has been matched
+                        if ('playlist' in tags['identifier'][identifier]):
+                            playlist = tags['identifier'][identifier]['playlist']
+                            self.playPlaylist(filename)
                         if ('mp3' in tags['identifier'][identifier]):
                             filename = tags['identifier'][identifier]['mp3']
                             self.playMp3(filename)

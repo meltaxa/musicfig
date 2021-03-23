@@ -145,7 +145,7 @@ class Base():
     def startMp3(self, filename, is_playlist=False):
         global mp3_duration
         # load an mp3 file
-        if not is_playlist:
+        if is_playlist:
             self.p.playlist(filename)
         else:
             mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename

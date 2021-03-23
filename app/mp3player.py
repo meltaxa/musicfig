@@ -185,7 +185,8 @@ class Player:
                 if self._current_state in [PlayerState.PLAYING]:
                     self.out.pause()
 
-                self.playlist_queue.put(tuple(command[1]))
+                for song in command[1]:
+                    self.playlist_queue.put(song)
 
                 self._set_state(PlayerState.PLAYLIST)
                 self._play_playlist()
@@ -196,7 +197,7 @@ class Player:
     def _play_playlist(self):
         while True:
             try:
-                song_mp3= self.playlist_queue.get(block=False)
+                song_mp3 = self.playlist_queue.get(block=False)
                 self.mp3.open(song_mp3)
                 tf = self.mp3.frame_length()
                 self.track_length = self.mp3.frame_seconds(tf)

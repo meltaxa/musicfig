@@ -6,3 +6,4 @@ tags.yml
 .idea/
 .DS_Store
 env/
+app/test.py

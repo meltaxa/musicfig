@@ -28,12 +28,12 @@ check_python_version() {
     # Check Python version
     [[ "$DOCKER" ]] && return
     echo "[INFO] Checking Python version..."
-    PYTHON_VERSION=$(python3 --version | awk '{ print $NF }')
-    REQUIRED_VERSION="3.7.3"
+    PYTHON_VERSION=$(python --version | awk '{ print $NF }')
+    REQUIRED_VERSION="3.8.5"
     if [[ $PYTHON_VERSION != $REQUIRED_VERSION ]]; then
         min=$(echo $PYTHON_VERSION $REQUIRED_VERSION| awk '{if ($1 < $2) print $1; else print $2}')
         if [[ "$min" == "$PYTHON_VERSION" ]]; then
-            echo "[ERROR] Please install Python 3.7.3 or higher."
+            echo "[ERROR] Please install Python 3.8.5 or higher."
             exit 1
         fi
     fi
@@ -84,7 +84,7 @@ setup_files() {
 install_startup() {
     [[ "$DOCKER" ]] && return
     # Install startup service
-    PYTHON_PATH=$(which python3)
+    PYTHON_PATH=$(which python)
     MUSICFIG_DIR=$(pwd)
     cp musicfig.service musicfig.service-temp
     sed -i "s!%MUSICFIG_DIR%!${MUSICFIG_DIR}!ig" musicfig.service-temp

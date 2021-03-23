@@ -123,7 +123,7 @@ class Player:
         self.mp3 = ExtMpg123()
         self.out = ExtOut123()
 
-        self.command_queue = queue.Queue()
+        self.command_queue = queue.Queue(maxsize=1)
         self.event_queue = queue.Queue()
         self.playlist_queue = queue.Queue()
 
@@ -181,7 +181,6 @@ class Player:
                 if self._current_state in [PlayerState.PLAYING]:
                     self._play()
             elif command[0] == Player.Command.PLAYLIST:
-                logger.info(f"command1::{command[1]}")
                 if self._current_state in [PlayerState.PLAYING]:
                     self.out.pause()
 

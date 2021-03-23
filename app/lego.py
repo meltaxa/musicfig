@@ -147,6 +147,7 @@ class Base():
         # load an mp3 file
         if not is_playlist:
             mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
+            logger.info('Playing %s.' % filename)
             self.p.open(mp3file)
             self.p.play()
 
@@ -229,7 +230,6 @@ class Base():
             tag = self.base.update_nfc()
             if tag:
                 status = tag.split(':')[0]
-                logger.info(f"status::{status}")
                 pad = int(tag.split(':')[1])
                 identifier = tag.split(':')[2]
                 if status == 'removed':

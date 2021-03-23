@@ -6,6 +6,7 @@ import threading
 import queue
 import mpg123
 import logging
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +102,8 @@ class PlayerState(Enum):
     READY = 3,  # Ready to play a time x
     PLAYING = 4,  # Playing a file at time x
     PAUSED = 5,  # Paused at time x
-    FINISHED = 6  # Finished
+    FINISHED = 6,  # Finished
+    PLAYLIST = 7   #Playing a playlist
 
 
 class Player:
@@ -122,6 +124,7 @@ class Player:
 
         self.command_queue = queue.Queue()
         self.event_queue = queue.Queue()
+        self.playlist_queue = queue.Queue()
 
         self._current_state = PlayerState.INITALISED
         self.event_queue.put((self._current_state, None))
@@ -130,7 +133,6 @@ class Player:
     def _run_player(self):
         while True:
             command = self.command_queue.get(block=True, timeout=None)
-            logger.info(f"command::{command}")
             if command[0] == Player.Command.LOAD:
                 if self._current_state in [PlayerState.PLAYING]:
                     self.out.pause()
@@ -179,9 +181,48 @@ class Player:
                     self._play()
             elif command[0] == Player.Command.PLAYLIST:
                 logger.info(f"command1::{command[1]}")
+                if self._current_state in [PlayerState.PLAYING]:
+                    self.out.pause()
+
+                self.playlist_queue.put(tuple(command[1]))
+
+                self._set_state(PlayerState.PLAYLIST)
+                self._play_playlist()
             else:
                 # what happened?
                 pass
+
+    def _play_playlist(self):
+        for song_mp3 in iter(self.playlist_queue, None):
+            self.mp3.open(song_mp3)
+            tf = self.mp3.frame_length()
+            self.track_length = self.mp3.frame_seconds(tf)
+            self.frames_per_second = tf // self.track_length
+            self.update_per_frame_count = round(self.frames_per_second / 5)
+            self.to_time = self.track_length
+            fc = self.mp3.tellframe()
+            current_time = self.mp3.frame_seconds(fc)
+            self._set_state(PlayerState.PLAYING, current_time)
+
+            to_frame = self.mp3.timeframe(self.to_time) + 1
+
+            for frame in self.mp3.iter_frames(self.out.start):
+                self.out.play(frame)
+
+                fc += 1
+                if fc > to_frame:
+                    current_time = self.mp3.frame_seconds(self.mp3.tellframe())
+                    self._set_state(PlayerState.PAUSED, current_time)
+                    return
+
+                if fc % self.update_per_frame_count == 0:
+                    current_time = self.mp3.frame_seconds(self.mp3.tellframe())
+                    self.event_queue.put((PlayerState.PLAYING, current_time))
+
+                if not self.command_queue.empty():
+                    return
+
+        self._set_state(PlayerState.FINISHED)
 
     def _play(self):
         fc = self.mp3.tellframe()

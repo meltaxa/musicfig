@@ -146,6 +146,8 @@ class Base():
         global mp3_duration
         # load an mp3 file
         if not is_playlist:
+            self.p.playlist(filename)
+        else:
             mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
             self.p.open(mp3file)
             self.p.play()
@@ -153,16 +155,7 @@ class Base():
             audio = MP3(mp3file)
             mp3_duration = audio.info.length
             self.startLightshow(mp3_duration * 1000)
-        else:
-            mp3_time = 0
-            self.p.playlist(filename)
-            for mp3file in filename:
-                audio = MP3(mp3file)
-                mp3_time = mp3_time + audio.info.length
-                logger.info(f"mp3file::{mp3file}")
-                logger.info('Playing %s.' % filename)
-            ##self.p.play()
-            self.startLightshow(mp3_time * 1000)
+
 
     def stopMp3(self):
         global mp3state
@@ -201,14 +194,11 @@ class Base():
         global mp3state
         list_mp3_to_play = []
         spotify.pause()
-        # New play
-        self.stopMp3()
-        mp3list = '/home/pi/Music/' + playlist_filename + '/*.mp3'
-        logger.info(f"mp3list::{mp3list}")
-        for mp3song in glob.glob(mp3list):
-            list_mp3_to_play.append(mp3song)
 
-        ##self.startMp3(random.choice(list_mp3_to_play), True)
+        mp3list = '/home/pi/Music/' + playlist_filename + '/*.mp3'
+
+        list_mp3_to_play = glob.glob(mp3list)
+
         self.startMp3(list_mp3_to_play, True)
         mp3state = 'PLAYING'
 

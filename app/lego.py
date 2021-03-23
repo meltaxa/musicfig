@@ -145,9 +145,7 @@ class Base():
     def startMp3(self, filename, is_playlist=False):
         global mp3_duration
         # load an mp3 file
-        if is_playlist:
-            self.p.playlist(filename)
-        else:
+        if not is_playlist:
             mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
             self.p.open(mp3file)
             self.p.play()
@@ -155,7 +153,8 @@ class Base():
             audio = MP3(mp3file)
             mp3_duration = audio.info.length
             self.startLightshow(mp3_duration * 1000)
-
+        else:
+            self.p.playlist(filename)
 
     def stopMp3(self):
         global mp3state

@@ -282,9 +282,9 @@ class Base():
                         if ('playlist' in tags['identifier'][identifier]):
                             playlist = tags['identifier'][identifier]['playlist']
                             if ('shuffle' in tags['identifier'][identifier]):
-                                shuffle = true
+                                shuffle = True
                             else:
-                                shuffle = false
+                                shuffle = False
                             self.playPlaylist(playlist, mp3_dir, shuffle)
                         if ('mp3' in tags['identifier'][identifier]):
                             filename = tags['identifier'][identifier]['mp3']

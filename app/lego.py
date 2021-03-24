@@ -190,12 +190,12 @@ class Base():
         self.startMp3(filename)
         mp3state = 'PLAYING'
 
-    def playPlaylist(self, playlist_filename):
+    def playPlaylist(self, playlist_filename, mp3_dir):
         global mp3state
         list_mp3_to_play = []
         spotify.pause()
 
-        mp3list = '/home/pi/Music/' + playlist_filename + '/*.mp3'
+        mp3list = mp3_dir + playlist_filename + '/*.mp3'
 
         list_mp3_to_play = glob.glob(mp3list)
 
@@ -249,6 +249,7 @@ class Base():
                     # Reload the tags config file
                     nfc.load_tags()
                     tags = nfc.tags
+                    mp3_dir = tags['mp3_dir']
 
                     # Stop any current songs and light shows
                     try:
@@ -266,7 +267,7 @@ class Base():
                         # A tag has been matched
                         if ('playlist' in tags['identifier'][identifier]):
                             playlist = tags['identifier'][identifier]['playlist']
-                            self.playPlaylist(playlist)
+                            self.playPlaylist(playlist, mp3_dir)
                         if ('mp3' in tags['identifier'][identifier]):
                             filename = tags['identifier'][identifier]['mp3']
                             self.playMp3(filename)

@@ -1,8 +1,15 @@
+# Base path of mp3 folder
+mp3_dir: /path/to/base/mp3/folder
+
 # Ligthshow switch
 lights: on
 
 # NFC tags have unique identifiers which are assigned "Spotify URI" actions.
 identifier:
+    05631b62124:
+        # LEGO minifigure. Play mp3 folder
+        name: Peter Pan
+        playlist: mp3/folder/name
     04831a62714080:
         # LEGO minifigure. Play 11s into the Black Sabbath track.
         name: Ironman

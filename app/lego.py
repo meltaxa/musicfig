@@ -156,6 +156,11 @@ class Base():
             self.startLightshow(mp3_duration * 1000)
         else:
             self.p.playlist(filename)
+            mp3_duration = 0
+            for file_mp3 in filename:
+                audio = MP3(mp3file)
+                mp3_duration = mp3_duration + audio.info.length
+            self.startLightshow(mp3_duration * 1000)
 
     def stopMp3(self):
         global mp3state
@@ -196,10 +201,10 @@ class Base():
         spotify.pause()
 
         mp3list = mp3_dir +'/'+ playlist_filename + '/*.mp3'
-        logger.info(mp3list)
+        ##logger.info(mp3list)
 
         list_mp3_to_play = glob.glob(mp3list)
-        logger.info(list_mp3_to_play)
+        ##logger.info(list_mp3_to_play)
 
         self.startMp3(list_mp3_to_play, True)
         mp3state = 'PLAYING'
@@ -252,7 +257,7 @@ class Base():
                     nfc.load_tags()
                     tags = nfc.tags
                     mp3_dir = tags['mp3_dir']
-                    logger.info(mp3_dir)
+                    ##logger.info(mp3_dir)
 
                     # Stop any current songs and light shows
                     try:

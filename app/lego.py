@@ -157,9 +157,12 @@ class Base():
         else:
             self.p.playlist(filename)
             mp3_duration = 0
-            for file_mp3 in filename:
-                audio = MP3(file_mp3)
-                mp3_duration = mp3_duration + audio.info.length
+            if filename:
+                for file_mp3 in filename:
+                    audio = MP3(file_mp3)
+                    mp3_duration = mp3_duration + audio.info.length
+            else:
+                logger.info('Check the folder, maybe empty!!!')
             self.startLightshow(mp3_duration * 1000)
 
     def stopMp3(self):
@@ -206,7 +209,7 @@ class Base():
         list_mp3_to_play = glob.glob(mp3list)
 
         if shuffle:
-            list_mp3_to_play = random.shuffle(list_mp3_to_play)
+            random.shuffle(list_mp3_to_play)
         ##logger.debug(list_mp3_to_play)
 
         self.startMp3(list_mp3_to_play, mp3_dir, True)

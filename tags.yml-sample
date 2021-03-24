@@ -10,6 +10,7 @@ identifier:
         # LEGO minifigure. Play mp3 folder
         name: Peter Pan
         playlist: mp3/folder/name
+        shuffle: on
     04831a62714080:
         # LEGO minifigure. Play 11s into the Black Sabbath track.
         name: Ironman

@@ -142,11 +142,11 @@ class Base():
         threading.Thread(target=monitor, name="monitor").daemon = True
         threading.Thread(target=monitor, name="monitor").start() 
 
-    def startMp3(self, filename, is_playlist=False):
+    def startMp3(self, filename, mp3_dir, is_playlist=False):
         global mp3_duration
         # load an mp3 file
         if not is_playlist:
-            mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
+            mp3file = mp3_dir + filename
             logger.info('Playing %s.' % filename)
             self.p.open(mp3file)
             self.p.play()
@@ -158,7 +158,7 @@ class Base():
             self.p.playlist(filename)
             mp3_duration = 0
             for file_mp3 in filename:
-                audio = MP3(mp3file)
+                audio = MP3(file_mp3)
                 mp3_duration = mp3_duration + audio.info.length
             self.startLightshow(mp3_duration * 1000)
 
@@ -178,7 +178,7 @@ class Base():
             mp3state = 'PAUSED'
             return
 
-    def playMp3(self, filename):
+    def playMp3(self, filename, mp3_dir):
         global t
         global mp3state
         spotify.pause()
@@ -192,21 +192,24 @@ class Base():
                 return
         # New play 
         self.stopMp3()
-        self.startMp3(filename)
+        self.startMp3(filename, mp3_dir)
         mp3state = 'PLAYING'
 
-    def playPlaylist(self, playlist_filename, mp3_dir):
+    def playPlaylist(self, playlist_filename, mp3_dir, shuffle=False):
         global mp3state
         list_mp3_to_play = []
         spotify.pause()
 
         mp3list = mp3_dir +'/'+ playlist_filename + '/*.mp3'
-        ##logger.info(mp3list)
+        ##logger.debug(mp3list)
 
         list_mp3_to_play = glob.glob(mp3list)
-        ##logger.info(list_mp3_to_play)
 
-        self.startMp3(list_mp3_to_play, True)
+        if shuffle:
+            list_mp3_to_play = random.shuffle(list_mp3_to_play)
+        ##logger.debug(list_mp3_to_play)
+
+        self.startMp3(list_mp3_to_play, mp3_dir, True)
         mp3state = 'PLAYING'
 
     def startLego(self):
@@ -256,8 +259,11 @@ class Base():
                     # Reload the tags config file
                     nfc.load_tags()
                     tags = nfc.tags
-                    mp3_dir = tags['mp3_dir']
-                    ##logger.info(mp3_dir)
+                    try:
+                        mp3_dir = tags['mp3_dir'] + '/'
+                    except Exception:
+                        mp3_dir = os.path.dirname(os.path.abspath(__file__)) + '/../music/'
+                    ##logger.debug(mp3_dir)
 
                     # Stop any current songs and light shows
                     try:
@@ -275,10 +281,14 @@ class Base():
                         # A tag has been matched
                         if ('playlist' in tags['identifier'][identifier]):
                             playlist = tags['identifier'][identifier]['playlist']
-                            self.playPlaylist(playlist, mp3_dir)
+                            if ('shuffle' in tags['identifier'][identifier]):
+                                shuffle = true
+                            else:
+                                shuffle = false
+                            self.playPlaylist(playlist, mp3_dir, shuffle)
                         if ('mp3' in tags['identifier'][identifier]):
                             filename = tags['identifier'][identifier]['mp3']
-                            self.playMp3(filename)
+                            self.playMp3(filename, mp3_dir)
                         if ('slack' in tags['identifier'][identifier]):
                             webhook.Requests.post(tags['slack_hook'],{'text': tags['identifier'][identifier]['slack']})
                         if ('command' in tags['identifier'][identifier]):

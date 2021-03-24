@@ -195,7 +195,7 @@ class Base():
         list_mp3_to_play = []
         spotify.pause()
 
-        mp3list = mp3_dir + playlist_filename + '/*.mp3'
+        mp3list = mp3_dir +'/'+ playlist_filename + '/*.mp3'
         logger.info(mp3list)
 
         list_mp3_to_play = glob.glob(mp3list)

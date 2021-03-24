@@ -196,8 +196,10 @@ class Base():
         spotify.pause()
 
         mp3list = mp3_dir + playlist_filename + '/*.mp3'
+        logger.info(mp3list)
 
         list_mp3_to_play = glob.glob(mp3list)
+        logger.info(list_mp3_to_play)
 
         self.startMp3(list_mp3_to_play, True)
         mp3state = 'PLAYING'
@@ -250,6 +252,7 @@ class Base():
                     nfc.load_tags()
                     tags = nfc.tags
                     mp3_dir = tags['mp3_dir']
+                    logger.info(mp3_dir)
 
                     # Stop any current songs and light shows
                     try:

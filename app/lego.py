@@ -13,6 +13,7 @@ import random
 import usb.core
 import usb.util
 import app.mp3player as mp3player
+import glob
 
 logger = logging.getLogger(__name__)
 
@@ -141,17 +142,28 @@ class Base():
         threading.Thread(target=monitor, name="monitor").daemon = True
         threading.Thread(target=monitor, name="monitor").start() 
 
-    def startMp3(self, filename):
+    def startMp3(self, filename, mp3_dir, is_playlist=False):
         global mp3_duration
         # load an mp3 file
-        mp3file = os.path.dirname(os.path.abspath(__file__)) + '/../music/' + filename
-        logger.info('Playing %s.' % filename)
-        self.p.open(mp3file)
-        self.p.play()
+        if not is_playlist:
+            mp3file = mp3_dir + filename
+            logger.info('Playing %s.' % filename)
+            self.p.open(mp3file)
+            self.p.play()
 
-        audio = MP3(mp3file)
-        mp3_duration = audio.info.length
-        self.startLightshow(mp3_duration * 1000)
+            audio = MP3(mp3file)
+            mp3_duration = audio.info.length
+            self.startLightshow(mp3_duration * 1000)
+        else:
+            self.p.playlist(filename)
+            mp3_duration = 0
+            if filename:
+                for file_mp3 in filename:
+                    audio = MP3(file_mp3)
+                    mp3_duration = mp3_duration + audio.info.length
+            else:
+                logger.info('Check the folder, maybe empty!!!')
+            self.startLightshow(mp3_duration * 1000)
 
     def stopMp3(self):
         global mp3state
@@ -169,7 +181,7 @@ class Base():
             mp3state = 'PAUSED'
             return
 
-    def playMp3(self, filename):
+    def playMp3(self, filename, mp3_dir):
         global t
         global mp3state
         spotify.pause()
@@ -183,7 +195,24 @@ class Base():
                 return
         # New play 
         self.stopMp3()
-        self.startMp3(filename)
+        self.startMp3(filename, mp3_dir)
+        mp3state = 'PLAYING'
+
+    def playPlaylist(self, playlist_filename, mp3_dir, shuffle=False):
+        global mp3state
+        list_mp3_to_play = []
+        spotify.pause()
+
+        mp3list = mp3_dir +'/'+ playlist_filename + '/*.mp3'
+        ##logger.debug(mp3list)
+
+        list_mp3_to_play = glob.glob(mp3list)
+
+        if shuffle:
+            random.shuffle(list_mp3_to_play)
+        ##logger.debug(list_mp3_to_play)
+
+        self.startMp3(list_mp3_to_play, mp3_dir, True)
         mp3state = 'PLAYING'
 
     def startLego(self):
@@ -233,6 +262,11 @@ class Base():
                     # Reload the tags config file
                     nfc.load_tags()
                     tags = nfc.tags
+                    try:
+                        mp3_dir = tags['mp3_dir'] + '/'
+                    except Exception:
+                        mp3_dir = os.path.dirname(os.path.abspath(__file__)) + '/../music/'
+                    ##logger.debug(mp3_dir)
 
                     # Stop any current songs and light shows
                     try:
@@ -248,9 +282,16 @@ class Base():
                             previous_tag = current_tag
                         current_tag = identifier
                         # A tag has been matched
+                        if ('playlist' in tags['identifier'][identifier]):
+                            playlist = tags['identifier'][identifier]['playlist']
+                            if ('shuffle' in tags['identifier'][identifier]):
+                                shuffle = True
+                            else:
+                                shuffle = False
+                            self.playPlaylist(playlist, mp3_dir, shuffle)
                         if ('mp3' in tags['identifier'][identifier]):
                             filename = tags['identifier'][identifier]['mp3']
-                            self.playMp3(filename)
+                            self.playMp3(filename, mp3_dir)
                         if ('slack' in tags['identifier'][identifier]):
                             webhook.Requests.post(tags['slack_hook'],{'text': tags['identifier'][identifier]['slack']})
                         if ('command' in tags['identifier'][identifier]):

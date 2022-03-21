@@ -95,11 +95,11 @@ Bus 001 Device 008: ID 0e6f:0241 Logic3
 
 When running Docker, the device path will correspond to the bus and device numbers. For example, Bus 001 and Device 008 would correspond to: /dev/bus/usb/001/008.
 
-Run Docker:
+Run Musicfig Docker example (change the config directory mount and usb device bus accordingly):
 ```
-docker run -v <path/to/configs>:/config -p 5000:5000 --device=/dev/bus/usb/<bus>/<device> --device=/dev/snd meltaxa/musicfig
+docker run -v /home/pi/musicfig:/config -p 5000:5000 --device=/dev/bus/usb/001/008 --device=/dev/snd meltaxa/musicfig
 ```
-The /path/to/configs is the directory where you store the config.py and tags.yml files.
+In this example, the /home/pi/musicfig is the directory where you store the config.py and tags.yml files.
 
 # Stopping and Starting
 

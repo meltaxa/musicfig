@@ -61,6 +61,7 @@ pip_install() {
 setup_usb() {
     if [ ! -f /etc/udev/rules.d/99-lego.rules ]; then
         echo "[INFO] Install USB device rules..."
+        curl -s -O https://raw.githubusercontent.com/meltaxa/musicfig/master/99-lego.rules
         sudo cp ${DIR}/99-lego.rules /etc/udev/rules.d
         sudo udevadm control --reload-rules && sudo udevadm trigger
     fi

@@ -4,7 +4,7 @@ WORKDIR /musicfig
 COPY . /musicfig/
 
 RUN apk update && \
-    apk mpg123
+    apk add mpg123
 
 RUN pip3 install --upgrade pip wheel && pip3 install --upgrade -r requirements.txt
 

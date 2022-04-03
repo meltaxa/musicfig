@@ -36,7 +36,7 @@ logging.config.dictConfig({
 })
 logging.getLogger('werkzeug').disabled = True
 logger = logging.getLogger(__name__)
-os.environ['WERKZEUG_RUN_MAIN'] = 'true'
+#os.environ['WERKZEUG_RUN_MAIN'] = 'true'
 
 # Check for updates
 stream = os.popen('git tag 2>/dev/null | tail -n 1')

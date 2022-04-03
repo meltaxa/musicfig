@@ -1,10 +1,10 @@
-FROM python:3.9-alpine
+FROM python:3.9
 
 WORKDIR /musicfig
 COPY . /musicfig/
 
-RUN apk update && \
-    apk add mpg123
+RUN apt-get update && \
+    apt-get -y install mpg123
 
 RUN pip3 install --upgrade pip wheel && pip3 install --upgrade -r requirements.txt
 

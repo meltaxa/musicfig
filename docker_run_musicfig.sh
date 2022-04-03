@@ -1,4 +1,4 @@
-#!/bin/bash -xv
+#!/bin/bash
 
 if [[ "$1" = "local" ]]; then
   # This assumes you have built a docker image locally using the command:

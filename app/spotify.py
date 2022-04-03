@@ -257,7 +257,7 @@ def nowplaying():
                                artist=artist, 
                                name=name)
           # Optional: updates an external nowplaying site too:
-          if np[0] not None:
+          if np[0] is not None:
               np_data = {'data': out,
                          'token': np[1]}
               x = requests.post("https://%s/update" % np[0], data = np_data)

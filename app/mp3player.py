@@ -8,6 +8,7 @@ from queue import Empty
 import mpg123
 import logging
 import random
+from ctypes.util import find_library
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +34,15 @@ class ExtMpg123(mpg123.Mpg123):
     SEEK_END = 2
 
     def __init__(self, filename=None, library_path=None):
+        if not library_path:
+            library_path = find_library('mpg123')
+
+        if not library_path:
+            library_path = find_library('libmpg123-0')
+
+        if not library_path:
+            raise self.LibInitializationException('libmpg123 not found.')
+
         super().__init__(filename, library_path)
 
     def open(self, filename):

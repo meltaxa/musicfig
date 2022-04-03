@@ -22,8 +22,14 @@ spotify = Blueprint('spotify', __name__)
 
 conf = (current_app.config['CLIENT_ID'], 
         current_app.config['CLIENT_SECRET'], 
-        current_app.config['REDIRECT_URI']
-       )
+        current_app.config['REDIRECT_URI'],
+)
+
+np = (
+      current_app.config['NOWPLAYING_URL'],
+      current_app.config['NOWPLAYING_TOKEN']
+     )
+
 cred = tk.Credentials(*conf)
 tkspotify = tk.Spotify()
 users = {}
@@ -250,6 +256,11 @@ def nowplaying():
                                image_url=image_url, 
                                artist=artist, 
                                name=name)
+          # Optional: updates an external nowplaying site too:
+          if np[0] not None:
+              np_data = {'data': out,
+                         'token': np[1]}
+              x = requests.post("https://%s/update" % np[0], data = np_data)
           last_played = song.item.id
           last_out = out
         return out
